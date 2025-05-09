@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Historical Event</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .form-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .required-field::after {
+        content: "*";
+        color: red;
+        margin-left: 4px;
+      }
+      .help-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <!-- Header (reuse the same header from dashboard.html) -->
+    <header class="bg-white py-3 shadow-sm mb-5">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <a class="navbar-brand fw-bold text-primary" href="{% url 'home' %}"
+            >Historical Events</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}">
+                  <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="form-container">
+        <!-- Title Section -->
+        <div class="text-center mb-5">
+          <h1 class="display-5 fw-bold">Submit Historical Event</h1>
+          <p class="text-muted">Share your knowledge with the community</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card form-card border-0">
+          <div class="card-body p-4">
+            {% if messages %} {% for message in messages %}
+            <div
+              class="alert alert-{{ message.tags }} alert-dismissible fade show"
+              role="alert"
+            >
+              {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            {% endfor %} {% endif %}
+
+            <form method="post" class="needs-validation" novalidate>
+              {% csrf_token %}
+
+              <!-- Title Field -->
+              <div class="mb-4">
+                <label
+                  for="{{ form.title.id_for_label }}"
+                  class="form-label required-field"
+                  >Event Title</label
+                >
+                {{ form.title }} {% if form.title.help_text %}
+                <div class="help-text">{{ form.title.help_text }}</div>
+                {% endif %} {% if form.title.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.title.errors }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Description Field -->
+              <div class="mb-4">
+                <label
+                  for="{{ form.description.id_for_label }}"
+                  class="form-label required-field"
+                  >Description</label
+                >
+                {{ form.description }} {% if form.description.help_text %}
+                <div class="help-text">{{ form.description.help_text }}</div>
+                {% endif %} {% if form.description.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.description.errors }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Date and Category Row -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label
+                    for="{{ form.eventdate.id_for_label }}"
+                    class="form-label required-field"
+                    >Event Date</label
+                  >
+                  {{ form.eventdate }} {% if form.eventdate.help_text %}
+                  <div class="help-text">{{ form.eventdate.help_text }}</div>
+                  {% endif %} {% if form.eventdate.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.eventdate.errors }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label
+                    for="{{ form.category.id_for_label }}"
+                    class="form-label required-field"
+                    >Category</label
+                  >
+                  {{ form.category }} {% if form.category.help_text %}
+                  <div class="help-text">{{ form.category.help_text }}</div>
+                  {% endif %} {% if form.category.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.category.errors }}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Location and Importance Row -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label
+                    for="{{ form.location.id_for_label }}"
+                    class="form-label required-field"
+                    >Location</label
+                  >
+                  {{ form.location }} {% if form.location.help_text %}
+                  <div class="help-text">{{ form.location.help_text }}</div>
+                  {% endif %} {% if form.location.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.location.errors }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label
+                    for="{{ form.importance.id_for_label }}"
+                    class="form-label required-field"
+                    >Importance (1-10)</label
+                  >
+                  {{ form.importance }} {% if form.importance.help_text %}
+                  <div class="help-text">{{ form.importance.help_text }}</div>
+                  {% endif %} {% if form.importance.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.importance.errors }}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Source Field -->
+              <div class="mb-4">
+                <label
+                  for="{{ form.source.id_for_label }}"
+                  class="form-label required-field"
+                  >Source URL</label
+                >
+                {{ form.source }} {% if form.source.help_text %}
+                <div class="help-text">{{ form.source.help_text }}</div>
+                {% endif %} {% if form.source.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.source.errors }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Submit Button -->
+              <div class="text-center mt-5">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                  <i class="fas fa-paper-plane me-2"></i>Submit Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Guidelines Card -->
+        <div class="card form-card border-0 mt-4">
+          <div class="card-body p-4">
+            <h5 class="card-title mb-4">
+              <i class="fas fa-info-circle text-primary me-2"></i>
+              Submission Guidelines
+            </h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Ensure all required fields (marked with *) are filled out
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Provide accurate and verifiable information
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Include reliable sources to support your submission
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Write clear and concise descriptions
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Add Bootstrap form validation classes to all form fields
+      document
+        .querySelectorAll(".form-control, .form-select")
+        .forEach((input) => {
+          input.classList.add("form-control");
+          if (input.required) {
+            input.classList.add("required");
+          }
+        });
+    </script>
+  </body>
+</html>

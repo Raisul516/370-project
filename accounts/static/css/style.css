@@ -1,0 +1,57 @@
+/* Navigation Bar Styling */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 1em;
+}
+
+nav .brand {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5em;
+}
+
+nav .nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+nav .nav-links li {
+  margin-right: 1em;
+}
+
+nav .nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+nav .dropdown-toggle {
+  cursor: pointer;
+}
+
+nav .dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav .dropdown-menu li {
+  padding: 0.5em 1em;
+}
+
+nav .dropdown-menu li a {
+  color: black;
+  text-decoration: none;
+}
+
+nav .dropdown-toggle:hover + .dropdown-menu,
+nav .dropdown-menu:hover {
+  display: block;
+}

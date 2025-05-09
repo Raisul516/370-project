@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historical Events - Home</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-bg: #f8f9fa;
+        --dark-bg: #2c3e50;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--light-bg);
+      }
+
+      .navbar {
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        color: white !important;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: white !important;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .btn-primary {
+        background-color: var(--secondary-color);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 500;
+      }
+
+      .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+      }
+
+      .footer {
+        background-color: var(--dark-bg);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 4rem 0;
+        border-radius: 0 0 50px 50px;
+        margin-top: -1.5rem;
+      }
+
+      .section-title {
+        position: relative;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--secondary-color);
+      }
+
+      .category-card {
+        transition: all 0.3s ease;
+      }
+
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .importance-rating {
+        background-color: rgba(52, 152, 219, 0.1);
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+
+      .cta-section .card {
+        border-radius: 20px;
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--primary-color)
+        );
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .search-form .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .search-form .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+
+      .dropdown-item {
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-landmark me-2"></i>Historical Events
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'submit_event' %}">
+                <i class="fas fa-plus-circle me-1"></i>Submit Event
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user me-1"></i>{{ user.username }}
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="{% url 'profile' %}">
+                    <i class="fas fa-user-circle me-2"></i>My Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'my_contributions' %}">
+                    <i class="fas fa-history me-2"></i>My Events
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %}
+
+      <!-- Hero Section -->
+      <section class="hero-section text-center py-5 mb-5">
+        <div class="container">
+          <h1 class="display-4 fw-bold mb-4">
+            Discover History's Greatest Moments
+          </h1>
+          <p class="lead mb-4">
+            Join our community of history enthusiasts in documenting and
+            preserving historical events.
+          </p>
+
+          <!-- Search Form with Filters -->
+          <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+              <form action="{% url 'search_events' %}" method="GET" class="search-form bg-white p-3 rounded-3 shadow-sm">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <input
+                      type="text"
+                      name="q"
+                      class="form-control"
+                      placeholder="Search historical events..."
+                      value="{{ request.GET.q }}"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <select name="category" class="form-select">
+                      <option value="">All Categories</option>
+                      {% for category in categories %}
+                      <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>
+                        {{ category|title }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <input 
+                      type="date" 
+                      name="date" 
+                      class="form-control" 
+                      value="{{ request.GET.date }}"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <select name="importance" class="form-select">
+                      <option value="">All Importance</option>
+                      {% for i in "12345678910"|make_list %}
+                      <option value="{{ i }}" {% if request.GET.importance == i %}selected{% endif %}>
+                        {{ i }}/10
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-primary w-100" type="submit">
+                      <i class="fas fa-search me-1"></i>Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {% if not user.is_authenticated %}
+          <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+              <i class="fas fa-user-plus me-2"></i>Join Now
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- Recent Events Section -->
+      <section class="recent-events mb-5">
+        <div class="container">
+          <h2 class="section-title mb-4">
+            <i class="fas fa-clock me-2"></i>Recent Events
+          </h2>
+          <div class="row">
+            {% for event in recent_events %}
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-start mb-3"
+                  >
+                    <span class="badge bg-primary">{{ event.category }}</span>
+                    <small class="text-muted"
+                      >{{ event.eventdate|date:"M d, Y" }}</small
+                    >
+                  </div>
+                  <h5 class="card-title">{{ event.title }}</h5>
+                  <p class="card-text">
+                    {{ event.description|truncatewords:30 }}
+                  </p>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <small class="text-muted">
+                      <i class="fas fa-map-marker-alt me-1"></i>{{
+                      event.location }}
+                    </small>
+                    <div class="importance-rating">
+                      <i class="fas fa-star text-warning"></i>
+                      <span>{{ event.importance }}/10</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                  <a
+                    href="{% url 'event_detail' event.id %}"
+                    class="btn btn-link text-primary p-0"
+                  >
+                    Read More <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>No recent events
+                available.
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="categories-section mb-5">
+        <div class="container">
+          <h2 class="section-title mb-4">
+            <i class="fas fa-tags me-2"></i>Browse by Category
+          </h2>
+          <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-3 col-sm-6">
+              <a
+                href="{% url 'category_events' category %}"
+                class="text-decoration-none"
+              >
+                <div class="card category-card text-center h-100">
+                  <div class="card-body">
+                    <i
+                      class="fas fa-{% if category == 'political' %}landmark{% elif category == 'scientific' %}flask{% elif category == 'cultural' %}theater-masks{% elif category == 'military' %}shield-alt{% else %}history{% endif %} fa-2x mb-3 text-primary"
+                    ></i>
+                    <h5 class="card-title">{{ category|title }}</h5>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Today in History Section -->
+      {% if todays_events %}
+      <section class="today-in-history mb-5">
+        <div class="container">
+          <h2 class="section-title mb-4">
+            <i class="fas fa-calendar-day me-2"></i>Today in History
+          </h2>
+          <div class="timeline">
+            {% for event in todays_events %}
+            <div class="timeline-item">
+              <h5>{{ event.title }}</h5>
+              <p class="mb-2">{{ event.description|truncatewords:50 }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary">{{ event.category }}</span>
+                <a
+                  href="{% url 'event_detail' event.id %}"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- Call to Action Section -->
+      <section class="cta-section text-center py-5 mb-5">
+        <div class="container">
+          <div class="card bg-primary text-white">
+            <div class="card-body py-5">
+              <h2 class="mb-4">Have a Historical Event to Share?</h2>
+              <p class="lead mb-4">
+                Join our community and contribute to preserving history for
+                future generations.
+              </p>
+              {% if user.is_authenticated %}
+              <a href="{% url 'submit_event' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-plus-circle me-2"></i>Submit an Event
+              </a>
+              {% else %}
+              <div>
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg mb-3">
+                  <i class="fas fa-user-plus me-2"></i>Register to Submit Events
+                </a>
+                <div class="text-white mt-2">
+                  Already have an account? <a href="{% url 'login' %}" class="text-white"><u>Login here</u></a>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5><i class="fas fa-landmark me-2"></i>Historical Events</h5>
+            <p>Preserving history, one event at a time.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-white">Home</a></li>
+              <li>
+                <a href="{% url 'submit_event' %}" class="text-white"
+                  >Submit Event</a
+                >
+              </li>
+              <li><a href="#" class="text-white">About Us</a></li>
+              <li><a href="#" class="text-white">Contact</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5>Connect With Us</h5>
+            <div class="social-icons">
+              <a href="#" class="text-white me-3"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-white me-3"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-white me-3"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-white"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <hr class="mt-4 mb-3" style="border-color: rgba(255, 255, 255, 0.1)" />
+        <div class="text-center">
+          <p class="mb-0">
+            &copy; {% now "Y" %} Historical Events. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".card").forEach((card) => {
+          card.classList.add("fade-in");
+        });
+      });
+    </script>
+  </body>
+</html>

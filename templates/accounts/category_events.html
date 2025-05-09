@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ category }} Events</title>
+  </head>
+  <body>
+    <h1>Events in {{ category }}</h1>
+
+    {% for event in events %}
+    <div>
+      <h3>{{ event.title }}</h3>
+      <p>{{ event.description }}</p>
+      <p><strong>Date:</strong> {{ event.eventdate }}</p>
+      <p><strong>Location:</strong> {{ event.location }}</p>
+    </div>
+    {% empty %}
+    <p>No events found in this category.</p>
+    {% endfor %}
+  </body>
+</html>

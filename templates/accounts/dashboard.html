@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Historical Events</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #2ecc71;
+        --warning-color: #f1c40f;
+        --light-bg: #f8f9fa;
+        --dark-bg: #1a1a1a;
+        --dark-card: #2d2d2d;
+        --dark-text: #ffffff;
+        --dark-text-muted: #a0a0a0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .navbar {
+        background-color: var(--dark-card);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .navbar-brand {
+        color: var(--dark-text) !important;
+      }
+
+      .navbar-brand:hover {
+        color: var(--secondary-color) !important;
+      }
+
+      .nav-link {
+        color: var(--dark-text) !important;
+      }
+
+      .nav-link:hover {
+        color: var(--secondary-color) !important;
+      }
+
+      .dashboard-header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+
+      .stats-card {
+        background: var(--dark-card);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stats-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .card {
+        background: var(--dark-card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--dark-text);
+      }
+
+      .event-card {
+        background: var(--dark-card);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .text-muted {
+        color: var(--dark-text-muted) !important;
+      }
+
+      .section-title {
+        color: var(--dark-text);
+      }
+
+      .verification-badge {
+        background-color: var(--success-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .not-verified {
+        background-color: var(--warning-color);
+        color: var(--dark-bg);
+      }
+
+      .event-status {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+      }
+
+      .status-pending {
+        background-color: var(--warning-color);
+        color: var(--dark-bg);
+      }
+
+      .status-approved {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .status-rejected {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .dropdown-menu {
+        background: var(--dark-card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .dropdown-item {
+        color: var(--dark-text);
+      }
+
+      .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--secondary-color);
+      }
+
+      .dropdown-divider {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-tabs {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-tabs .nav-link {
+        color: var(--dark-text-muted);
+        border: none;
+      }
+
+      .nav-tabs .nav-link:hover {
+        border: none;
+        color: var(--dark-text);
+      }
+
+      .nav-tabs .nav-link.active {
+        background: none;
+        border: none;
+        color: var(--secondary-color);
+        border-bottom: 2px solid var(--secondary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-landmark me-2"></i>Historical Events
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <!-- Notifications Dropdown -->
+            <li class="nav-item dropdown me-3">
+              <a
+                class="nav-link dropdown-toggle position-relative"
+                href="#"
+                id="notificationsDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-bell"></i>
+                {% if unread_notifications_count %}
+                <span class="notification-badge"
+                  >{{ unread_notifications_count }}</span
+                >
+                {% endif %}
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-end notification-dropdown"
+                aria-labelledby="notificationsDropdown"
+              >
+                <h6 class="dropdown-header">Notifications</h6>
+                {% if notifications %} {% for notification in notifications %}
+                <div class="notification-item">
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="fas {% if notification.type == 'approval' %}fa-check-circle text-success{% elif notification.type == 'rejection' %}fa-times-circle text-danger{% else %}fa-info-circle text-primary{% endif %} me-2"
+                    ></i>
+                    <div>
+                      <p class="mb-0">{{ notification.message }}</p>
+                      <small class="text-muted"
+                        >{{ notification.created_at|timesince }} ago</small
+                      >
+                    </div>
+                  </div>
+                </div>
+                {% endfor %} {% else %}
+                <div class="notification-item text-center text-muted">
+                  No notifications
+                </div>
+                {% endif %}
+                <div class="dropdown-divider"></div>
+                <a
+                  class="dropdown-item text-center"
+                  href="{% url 'notifications' %}"
+                  >View All</a
+                >
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user me-1"></i>{{ user.username }}
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="{% url 'profile' %}">
+                    <i class="fas fa-user-circle me-2"></i>My Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'my_contributions' %}">
+                    <i class="fas fa-history me-2"></i>My Events
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="mb-0">Welcome, {{ user.username }}!</h1>
+          <div class="d-flex align-items-center gap-3">
+            <span class="verification-badge {% if not user.profile.is_verified %}not-verified{% endif %}">
+              <i class="fas {% if user.profile.is_verified %}fa-check-circle{% else %}fa-clock{% endif %} me-1"></i>
+              {% if user.profile.is_verified %}Verified User{% else %}Pending Verification{% endif %}
+            </span>
+            <span class="points-badge">
+              <i class="fas fa-star me-1"></i>{{ user.profile.points }} Points
+            </span>
+          </div>
+        </div>
+
+<!-- Pending Events for Review Section -->
+{% if user.is_superuser or user.profile.is_verified %}
+<div class="pending-events-section my-4">
+    <h3>Pending Events for Review</h3>
+    {% if pending_events_for_review %}
+        {% for event in pending_events_for_review %}
+        <div class="event-card mb-3">
+            <h5>{{ event.title }}</h5>
+            <p>{{ event.description|truncatewords:20 }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-primary">{{ event.category }}</span>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar me-1"></i>{{ event.created_at|date:"M d, Y" }}
+                    </small>
+                </div>
+                <div>
+                    <!-- Approve Button -->
+                    <form method="POST" action="{% url 'approve_event' event.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success me-2">Approve</button>
+                    </form>
+                    <!-- Reject Button -->
+                    <form method="POST" action="{% url 'reject_event' event.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <p class="text-muted">There are no pending events for review at the moment.</p>
+    {% endif %}
+</div>
+{% endif %}
+<div class="event-card">
+  <h5>{{ event.title }}</h5>
+  <p>{{ event.description|truncatewords:20 }}</p>
+  <p>
+    <strong>Points Awarded:</strong> {{ event.points_awarded }}
+  </p>
+  <p>Event ID: {{ event.id }}</p>
+
+  {% if event.id %}
+    <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">View Details</a>
+  {% else %}
+    <span class="text-muted">No details available</span>
+  {% endif %}
+</div>
+        <!-- Search Form -->
+        <div class="search-form bg-white p-3 rounded-3 shadow-sm mt-4">
+          <form action="{% url 'search_events' %}" method="GET" class="row g-3">
+            <div class="col-md-4">
+              <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search historical events..."
+                value="{{ request.GET.q }}"
+              />
+            </div>
+            <div class="col-md-2">
+              <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>
+                  {{ category|title }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <input 
+                type="date" 
+                name="date" 
+                class="form-control" 
+                value="{{ request.GET.date }}"
+              />
+            </div>
+            <div class="col-md-2">
+              <select name="importance" class="form-select">
+                <option value="">All Importance</option>
+                {% for i in "12345678910"|make_list %}
+                <option value="{{ i }}" {% if request.GET.importance == i %}selected{% endif %}>
+                  {{ i }}/10
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary w-100" type="submit">
+                <i class="fas fa-search me-1"></i>Search
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="stats-card">
+              <i class="fas fa-users stats-icon text-primary"></i>
+              <h3>{{ total_users }}</h3>
+              <p class="mb-0">Total Community Members</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <i class="fas fa-check-circle stats-icon text-success"></i>
+              <h3>{{ user_events.approved.count }}</h3>
+              <p class="mb-0">Approved Events</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <i class="fas fa-star stats-icon text-primary"></i>
+              <h3>{{ all_events.count }}</h3>
+              <p class="mb-0">Total Events</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <i class="fas fa-award stats-icon text-warning"></i>
+              <h3>{{ user.profile.points }}</h3>
+              <p class="mb-0">Points</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+      <!-- Event Tabs -->
+      <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+          <a class="nav-link active" href="#approved" data-bs-toggle="tab">
+            <i class="fas fa-check-circle me-1"></i>Approved Events
+            <span class="badge bg-success ms-1">{{ user_events.approved.count }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#rejected" data-bs-toggle="tab">
+            <i class="fas fa-times-circle me-1"></i>Rejected
+            <span class="badge bg-danger ms-1">{{ user_events.rejected.count }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- Approved Events -->
+        <div class="tab-pane fade show active" id="approved">
+          {% for event in user_events.approved %}
+          <div class="event-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="mb-0">{{ event.title }}</h5>
+              <span class="event-status status-approved">
+                <i class="fas fa-check-circle me-1"></i>Approved
+              </span>
+            </div>
+            <p class="mb-2">{{ event.description|truncatewords:30 }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="badge bg-primary me-2">{{ event.category }}</span>
+                <small class="text-muted">
+                  <i class="fas fa-calendar me-1"></i>{{
+                  event.created_at|date:"M d, Y" }}
+                </small>
+              </div>
+              <a
+                href="{% url 'event_detail' event.id %}"
+                class="btn btn-sm btn-outline-primary"
+              >
+                View Details
+              </a>
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center py-4">
+            <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+            <h4>No approved events yet</h4>
+            <p class="text-muted">Your approved events will appear here.</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Rejected Events -->
+        <div class="tab-pane fade" id="rejected">
+          {% for event in user_events.rejected %}
+          <div class="event-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="mb-0">{{ event.title }}</h5>
+              <span class="event-status status-rejected">
+                <i class="fas fa-times-circle me-1"></i>Rejected
+              </span>
+            </div>
+            <p class="mb-2">{{ event.description|truncatewords:30 }}</p>
+            {% if event.rejection_reason %}
+            <div class="alert alert-danger py-2 mb-2">
+              <i class="fas fa-info-circle me-1"></i>{{ event.rejection_reason
+              }}
+            </div>
+            {% endif %}
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="badge bg-primary me-2">{{ event.category }}</span>
+                <small class="text-muted">
+                  <i class="fas fa-calendar me-1"></i>{{
+                  event.created_at|date:"M d, Y" }}
+                </small>
+              </div>
+              <a
+                href="{% url 'event_detail' event.id %}"
+                class="btn btn-sm btn-outline-danger"
+              >
+                View Details
+              </a>
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center py-4">
+            <i class="fas fa-times-circle fa-3x text-muted mb-3"></i>
+            <h4>No rejected events</h4>
+            <p class="text-muted">Rejected events will appear here.</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

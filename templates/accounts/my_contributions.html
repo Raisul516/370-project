@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Contributions - Historical Events</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #2ecc71;
+        --warning-color: #f1c40f;
+        --dark-bg: #1a1a1a;
+        --dark-card: #2d2d2d;
+        --dark-text: #ffffff;
+        --dark-text-muted: #a0a0a0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .navbar {
+        background-color: var(--dark-card);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .navbar-brand {
+        color: var(--dark-text) !important;
+      }
+
+      .navbar-brand:hover {
+        color: var(--secondary-color) !important;
+      }
+
+      .nav-link {
+        color: var(--dark-text) !important;
+      }
+
+      .nav-link:hover {
+        color: var(--secondary-color) !important;
+      }
+
+      .contributions-header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+
+      .event-card {
+        background: var(--dark-card);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .event-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .event-status {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .status-pending {
+        background-color: var(--warning-color);
+        color: var(--dark-bg);
+      }
+
+      .status-approved {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .status-rejected {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .text-muted {
+        color: var(--dark-text-muted) !important;
+      }
+
+      .btn-outline-primary {
+        color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: white;
+      }
+
+      .alert-danger {
+        background-color: rgba(231, 76, 60, 0.2);
+        border-color: rgba(231, 76, 60, 0.3);
+        color: #e74c3c;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-landmark me-2"></i>Historical Events
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contributions Header -->
+    <header class="contributions-header">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="mb-0">My Contributions</h1>
+          <a href="{% url 'submit_event' %}" class="btn btn-light">
+            <i class="fas fa-plus-circle me-1"></i>Submit New Event
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% if events %}
+      <div class="events-list">
+        {% for event in events %}
+        <div class="event-card">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h4 class="mb-0">{{ event.title }}</h4>
+            <span class="event-status status-{{ event.status }}">
+              {% if event.status == 'approved' %}
+              <i class="fas fa-check-circle me-1"></i>Approved {% elif
+              event.status == 'pending' %}
+              <i class="fas fa-clock me-1"></i>Pending {% else %}
+              <i class="fas fa-times-circle me-1"></i>Rejected {% endif %}
+            </span>
+          </div>
+
+          <p class="mb-3">{{ event.description|truncatewords:50 }}</p>
+
+          <div class="event-details mb-3">
+            <span class="badge bg-primary me-2">{{ event.category }}</span>
+            <span class="text-muted me-3">
+              <i class="fas fa-calendar me-1"></i>{{ event.eventdate|date:"M d,
+              Y" }}
+            </span>
+            <span class="text-muted me-3">
+              <i class="fas fa-map-marker-alt me-1"></i>{{ event.location }}
+            </span>
+            <span class="text-muted">
+              <i class="fas fa-star me-1"></i>Importance: {{ event.importance
+              }}/10
+            </span>
+          </div>
+
+          {% if event.status == 'rejected' and event.rejection_reason %}
+          <div class="alert alert-danger py-2 mb-3">
+            <i class="fas fa-info-circle me-1"></i>{{ event.rejection_reason }}
+          </div>
+          {% endif %} {% if event.points_awarded %}
+          <div class="points-info mb-3">
+            <i class="fas fa-award text-warning me-1"></i>
+            Points Earned: {{ event.points_awarded }}
+          </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              Submitted on {{ event.created_at|date:"M d, Y" }}
+            </small>
+            <a
+              href="{% url 'event_detail' event.id %}"
+              class="btn btn-sm btn-outline-primary"
+            >
+              <i class="fas fa-eye me-1"></i>View Details
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+        <h4>No contributions yet</h4>
+        <p class="text-muted">
+          Start contributing by submitting your first historical event!
+        </p>
+        <a href="{% url 'submit_event' %}" class="btn btn-primary mt-3">
+          <i class="fas fa-plus-circle me-1"></i>Submit Event
+        </a>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
